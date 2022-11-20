@@ -1,6 +1,6 @@
 <template>
   <div>
-    배포테스트
+    <p>배포 테스트 </p>
   </div>
 </template>
 
