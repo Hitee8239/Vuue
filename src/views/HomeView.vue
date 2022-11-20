@@ -1,5 +1,7 @@
 <template>
-  <hello-world />
+  <div>
+    배포테스트
+  </div>
 </template>
 
 <script>
@@ -7,9 +9,5 @@
 
   export default {
     name: 'Home',
-
-    components: {
-      HelloWorld,
-    },
-  }
+  };
 </script>
