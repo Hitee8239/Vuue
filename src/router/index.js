@@ -1,27 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import routes from './routes'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'about',
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  },
-  {
-    path: '/*',
-    name: 'Error',
-    component: () => import(/* webpackChunkName: "about" */ '../views/ErrorView.vue')
-  },
 
-]
 
 export function createRouter() {
 	const router = new VueRouter({
