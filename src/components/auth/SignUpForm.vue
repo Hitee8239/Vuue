@@ -31,20 +31,38 @@
     />
 
     <input-duplicate-check
-      ref="email"
-      label="이메일"
-      prepend-icon="mdi-email"
-      v-model="form.mb_email"
-      :rules="rules.email()"
-      :cbCheck="cbCheckEmail"
+    ref="email"
+    label="이메일"
+    prepend-icon="mdi-email"
+    v-model="form.mb_email"
+    :rules="rules.email()"
+    :cbCheck="cbCheckEmail"
     />
     <input-date
-      v-model="form.mb_birth"
-      label="생년월일"
-      prepend-icon="mdi-calendar"
-      :rules="rules.date({label : '생년월일'})"
+    v-model="form.mb_birth"
+    label="생년월일"
+    prepend-icon="mdi-calendar"
+    :rules="rules.date({ label: '생년월일' })"
     />
-
+    <input-phone
+      v-model="form.mb_phone"
+      label="전화번호"
+      prepend-icon="mdi-phone"
+      :rules="rules.phone()"
+    />
+    <input-radio
+    v-model="form.mb_gender"
+    :items="genderItems"
+    row
+    prepend-icon="mdi-gender-male-female"
+    :rules="[rules.require({ label: '성별' })]"
+    />
+    <input-post
+    :zipcode.sync="form.mb_zip"
+    :addr1.sync="form.mb_addr1"
+    :addr2.sync="form.mb_addr2"
+    />
+    
     <v-btn type="submit" block color="primary">회원가입</v-btn>
   </v-form>
 </template>
@@ -54,9 +72,19 @@ import validateRules from "../../../util/validateRules";
 import InputDate from "../InputForms/InputDate.vue";
 import InputDuplicateCheck from "../InputForms/InputDuplicateCheck.vue";
 import InputPassword from "../InputForms/InputPassword.vue";
+import InputRadio from "../InputForms/InputRadio.vue";
+import InputPhone from "../InputForms/InputPhone.vue";
+import InputPost from "../InputForms/InputPost.vue";
 
 export default {
-  components: { InputDuplicateCheck, InputPassword, InputDate },
+  components: {
+    InputDuplicateCheck,
+    InputPassword,
+    InputDate,
+    InputRadio,
+    InputPhone,
+    InputPost,
+  },
   name: "SignUpForm",
   props: {
     cbCheckId: {
@@ -83,6 +111,10 @@ export default {
         mb_addr1: "",
         mb_addr2: "",
       },
+      genderItems: [
+        { label: "남자", value: "M" },
+        { label: "여자", value: "F" },
+      ],
     };
   },
   computed: {
