@@ -9,7 +9,7 @@ const rules = {
         return v => !!v ? /^[a-zA-z0-9]+$/.test(v) || `영어와 숫자만 입력가능합니다.` :true;
     },
     pattern({label, pattern}){
-        return v => !!v ? pattern.test(v) || `[${label}] 형식에 맞게 입력하세요.` :true;
+        return v => !!v ? pattern.test(v) || `[${label}] 형식에 맞게 입력하세요. (영문 + 숫자)` :true;
     },
     matchValue(origin){
         return v => origin === v || '비밀번호가 일치하지 않습니다.'
@@ -56,7 +56,23 @@ const rules = {
 		}
 		arr.push(rules.pattern(opt));
 		return arr;
-    }
+    },
+	password(options) {
+		const defaultOptions = {
+			label : '비밀번호',
+			required : true,
+			len : 6,
+			pattern : /^.*(?=^.{6,}$)(?=.*\d)(?=.*[a-zA-Z]).*$/
+		};
+		const opt = Object.assign(defaultOptions, options);
+		const arr = [];
+		if(opt.required) {
+			arr.push(rules.require(opt));
+		}
+		arr.push(rules.min(opt));
+		arr.push(rules.pattern(opt));
+		return arr;
+	}
 };
 
 module.exports = rules;
