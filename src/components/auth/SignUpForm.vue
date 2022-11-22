@@ -11,32 +11,38 @@
     />
 
     <v-text-field
-			label="이름"
-			v-model="form.mb_name"
-			prepend-icon="mdi-card-account-details-outline"
-			:rules="rules.name()"
-		/>
-    <input-password 
-			label="비밀번호"
-			v-model="form.mb_password"
-			prepend-icon="mdi-lock"
-			:rules="rules.password()"
-		/>
+      label="이름"
+      v-model="form.mb_name"
+      prepend-icon="mdi-card-account-details-outline"
+      :rules="rules.name()"
+    />
+    <input-password
+      label="비밀번호"
+      v-model="form.mb_password"
+      prepend-icon="mdi-lock"
+      :rules="rules.password()"
+    />
 
-		<input-password 
-			label="비밀번호 확인"
-			v-model="confirmPw"
-			prepend-icon="mdi-lock"
-			:rules="[rules.matchValue(form.mb_password)]"
-		/>
+    <input-password
+      label="비밀번호 확인"
+      v-model="confirmPw"
+      prepend-icon="mdi-lock"
+      :rules="[rules.matchValue(form.mb_password)]"
+    />
 
-		<input-duplicate-check
-			ref="email"
-      v-model="form.mb_email"
+    <input-duplicate-check
+      ref="email"
       label="이메일"
       prepend-icon="mdi-email"
-			:rules="rules.email()"
-			:cbCheck="cbCheckEmail"
+      v-model="form.mb_email"
+      :rules="rules.email()"
+      :cbCheck="cbCheckEmail"
+    />
+    <input-date
+      v-model="form.mb_birth"
+      label="생년월일"
+      prepend-icon="mdi-calendar"
+      :rules="rules.date({label : '생년월일'})"
     />
 
     <v-btn type="submit" block color="primary">회원가입</v-btn>
@@ -44,22 +50,23 @@
 </template>
 
 <script>
-import validateRules from '../../../util/validateRules'
+import validateRules from "../../../util/validateRules";
+import InputDate from "../InputForms/InputDate.vue";
 import InputDuplicateCheck from "../InputForms/InputDuplicateCheck.vue";
-import InputPassword from '../InputForms/InputPassword.vue';
+import InputPassword from "../InputForms/InputPassword.vue";
 
 export default {
-  components: { InputDuplicateCheck, InputPassword },
+  components: { InputDuplicateCheck, InputPassword, InputDate },
   name: "SignUpForm",
-  props : {
-    cbCheckId : {
-      type : Function,
-      default : null,
+  props: {
+    cbCheckId: {
+      type: Function,
+      default: null,
     },
-    cbCheckEmail : {
-      type : Function,
-      default : null,
-    }
+    cbCheckEmail: {
+      type: Function,
+      default: null,
+    },
   },
   data() {
     return {
@@ -78,18 +85,17 @@ export default {
       },
     };
   },
-  computed : {
-    rules : ()=> validateRules,
+  computed: {
+    rules: () => validateRules,
   },
   methods: {
     async save() {
       this.$refs.form.validate();
       await this.$nextTick();
-      if(!this.valid) return;
-      if(!this.$refs.id.validate()) return;
-      if(!this.$refs.email.validate()) return;
-
-      console.log(this.form)
+      if (!this.valid) return;
+      if (!this.$refs.id.validate()) return;
+      if (!this.$refs.email.validate()) return;
+      console.log(this.form);
     },
   },
 };
