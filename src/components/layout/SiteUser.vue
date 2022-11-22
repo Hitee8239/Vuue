@@ -48,7 +48,7 @@ export default {
             localStorage.setItem('darkMode' , mode ? 'dark' : 'light');
         },
         getDarkMode(){
-            const mode = localStorage.getItem('darkMode') === 'dark' ? ture : false;
+            const mode = localStorage.getItem('darkMode') === 'dark' ? true : false;
             this.$vuetify.theme.dark = mode;
         },
     },
