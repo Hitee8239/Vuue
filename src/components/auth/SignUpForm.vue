@@ -63,7 +63,7 @@
     :addr2.sync="form.mb_addr2"
     />
     
-    <v-btn type="submit" block color="primary">회원가입</v-btn>
+    <v-btn type="submit" block color="primary" :loading="isLoading">회원가입</v-btn>
   </v-form>
 </template>
 
@@ -95,6 +95,7 @@ export default {
       type: Function,
       default: null,
     },
+    isLoading : Boolean,
   },
   data() {
     return {
@@ -127,7 +128,8 @@ export default {
       if (!this.valid) return;
       if (!this.$refs.id.validate()) return;
       if (!this.$refs.email.validate()) return;
-      console.log(this.form);
+
+      this.$emit('onSave', this.form);
     },
   },
 };

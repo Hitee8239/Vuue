@@ -13,5 +13,10 @@ export const actions = {
             `/api/member/duplicateCheck/${field}/${value}`
             )
             return data;
+    },
+    async createMember(ctx, form){
+        const { $axios } = Vue.prototype;
+		const data = await $axios.post('/api/member', form);
+		return data;
     }
 };
