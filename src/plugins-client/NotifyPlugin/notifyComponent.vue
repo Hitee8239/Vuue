@@ -12,7 +12,7 @@
           class="mr-4"
           >{{ options.icon }}</v-icon
         >
-        {{ content }}
+        <span v-html="content"></span>
         <v-form
           v-if="options.type === 'prompt'"
           ref="form"
