@@ -3,11 +3,9 @@ name: SERVER distribute
 on:
   push:
     branches: [ main ]
-
 jobs:
   build:
     runs-on: ubuntu-18.04
-
     steps:
       - name: Deploy
         uses: appleboy/ssh-action@master
