@@ -29,7 +29,11 @@
       <v-card-text class="mt-n4">
         <v-btn @click="loginGoogle" block>구글 로그인</v-btn>
       </v-card-text>
-      
+
+      <v-card-text class="mt-n4">
+				<v-btn @click="loginKakao" block >카카오 로그인</v-btn>
+			</v-card-text>
+
       <v-card-text class="mt-n4">
         <v-btn to="/join" block>회원가입</v-btn>
       </v-card-text>
@@ -40,7 +44,7 @@
 <script>
 import FindPwForm from "@/components/auth/FindPwForm.vue";
 import FindIdForm from "@/components/auth/FindIdForm.vue";
-import { mapActions , mapMutations } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 import SignInForm from "../../components/auth/SignInForm.vue";
 import SiteTitle from "../../components/layout/SiteTitle.vue";
 
@@ -56,7 +60,7 @@ export default {
   },
   methods: {
     ...mapActions("user", ["signInLocal", "findIdLocal", "findPwLocal"]),
-    ...mapMutations('user', ['SET_MEMBER', 'SET_TOKEN']),
+    ...mapMutations("user", ["SET_MEMBER", "SET_TOKEN"]),
     async loginLocal(form) {
       this.isLoading = true;
       const data = await this.signInLocal(form);
@@ -91,28 +95,35 @@ export default {
         this.tabs = 0;
       }
     },
-    async loginGoogle() {
-      const childWindow = window.open(
-        "/api/member/loginGoogle",
-        "googleAuth",
-        "top=10, left=10, width=500, height=600, status=no, menubar=no, toolbar=no, resizable=no"
-      );
-			if(!window.onGoogleCallback) {
-				window.onGoogleCallback = this.googleLoginCallback;
-			}
+    loginGoogle() {
+      this.loginSocial("/api/member/loginGoogle");
     },
-		googleLoginCallback(payload) {
-			if(payload.err) {
-				this.$toast.error(payload.err);
-			} else {
-				this.SET_MEMBER(payload.member);
-				this.SET_TOKEN(payload.token);
-				this.$router.push("/");
+    loginKakao() {
+			this.loginSocial('/api/member/loginKakao');
+		},
+    loginSocial(url) {
+      window.open(
+        url,
+        "Auth",
+        "top=10, left=10, width=500, height=600, status=no, menubar=no, toolbar=no, resizeable=no"
+      );
+      if (!window.onSocialCallback) {
+        window.onSocialCallback = this.socialLoginCallback;
+      }
+    },
+    socialLoginCallback(payload) {
+      if (payload.err) {
+        this.$toast.error(payload.err);
+      } else {
+        this.SET_MEMBER(payload.member);
+        this.SET_TOKEN(payload.token);
+        this.$router.push("/");
         this.$toast.info(
           `${this.$store.state.user.member.mb_name}님 환영합니다.`
         );
-			}
-		}
+      }
+    },
+    
   },
 };
 </script>

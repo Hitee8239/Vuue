@@ -5,6 +5,8 @@ const passport = require('passport')
 const jwt = require('../plugins/jwt')
 
 // api / member/duplicateCheck/mb_id/1234
+//MVC
+
 router.get("/duplicateCheck/:field/:value", async (req, res) => {
   const result = await modelCall(memberModel.duplicateCheck, req.params);
   res.json(result);
@@ -73,14 +75,21 @@ router.patch('/modifyPassword', async (req, res) => {
 });
 
 // 구글 로그인 요청
-router.get('/loginGoogle', passport.authenticate("google", { scope: ["email", "profile"] }));
-
-// 구글 로그인 콜백
-router.get('/google-callback',  (req, res)=>{
-	passport.authenticate('google', async function (err, member) {
-		const result = await modelCall(memberModel.googleCallback, req, res,  err, member);
+router.get('/loginGoogle', passport.authenticate('google', {
+	scope:['email', 'profile']
+}));
+// 카카오 로그인 요청
+router.get('/loginKakao', passport.authenticate('kakao'));
+//로그인 콜백 
+router.get('/social-callback/:provider', (req, res)=> {
+	const provider = req.params.provider
+	passport.authenticate(provider, async function(err, member){
+		// console.log(member);
+		// res.json(member);
+		const result = await modelCall(memberModel.socialCallback, req, res, err, member);
 		res.end(result);
 	})(req, res);
-});
+})
+
 
 module.exports = router;

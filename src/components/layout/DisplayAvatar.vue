@@ -3,7 +3,7 @@
           <template v-if="member">
               <v-img 
                   v-if="hasImage"
-                  :src="`/upload/memberPhoto/${member.mb_id}.jpg?w=32&h=32`"
+                  :src="memberPhoto"
                   @error="imageError"
               />
               <div v-else>{{ member.mb_name[0] }}</div>
@@ -25,6 +25,11 @@
           return {
               hasImage : true,
           }
+      },
+      computed: {
+        memberPhoto(){
+            return this.member.mb_photo || `/upload/memberPhoto/${member.mb_id}.jpg?w=32&h=32` ;
+        }
       },
       methods : {
           imageError() {

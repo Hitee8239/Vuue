@@ -2,6 +2,7 @@ const fs = require("fs");
 const sendMailer = require("../../plugins/sendMailer");
 const db = require("../../plugins/mysql");
 const jwt = require("../../plugins/jwt");
+
 const sqlHelper = require("../../../util/sqlHelper");
 const TABLE = require("../../../util/TABLE");
 const { LV } = require("../../../util/level");
@@ -97,88 +98,98 @@ const memberModel = {
 
   async findPw(req) {
     //회원  정보 검색
-		const data = req.query;
-		const sql = sqlHelper.SelectSimple(TABLE.MEMBER, data, ['mb_name']);
-		const [[member]] = await db.execute(sql.query, sql.values);
-		if (!member) throw new Error('일치하는 회원정보가 없습니다.');
+    const data = req.query;
+    const sql = sqlHelper.SelectSimple(TABLE.MEMBER, data, ["mb_name"]);
+    const [[member]] = await db.execute(sql.query, sql.values);
+    if (!member) throw new Error("일치하는 회원정보가 없습니다.");
 
     //토큰발급
-		const sm_hash = jwt.getRandToken(64);
-		const title = 'DOGFLIX';
-		const sm_subject = `${title} 비밀번호 찾기`;
-		const sm_create_at = moment().format('LT');
-		const expire_at = moment().add('30', 'm');
+    const sm_hash = jwt.getRandToken(64);
+    const title = "DOGFLIX";
+    const sm_subject = `${title} 비밀번호 찾기`;
+    const sm_create_at = moment().format("LT");
+    const expire_at = moment().add("30", "m");
 
-		const hostName = req.headers['x-forwarded-host'] || req.headers.host;
-		const baseUrl = `${req.protocol}://${hostName}/modifyPassword/`;
+    const hostName = req.headers["x-forwarded-host"] || req.headers.host;
+    const baseUrl = `${req.protocol}://${hostName}/modifyPassword/`;
 
-		let sm_content = fs.readFileSync(__dirname + '/findPwForm.html').toString();
-		sm_content = sm_content.replace('{{name}}', member.mb_name);
-		sm_content = sm_content.replace('{{time}}', expire_at.format('LLLL') + '분');
-		sm_content = sm_content.replace('{{link}}', baseUrl + sm_hash);
+    let sm_content = fs.readFileSync(__dirname + "/findPwForm.html").toString();
+    sm_content = sm_content.replace("{{name}}", member.mb_name);
+    sm_content = sm_content.replace(
+      "{{time}}",
+      expire_at.format("LLLL") + "분"
+    );
+    sm_content = sm_content.replace("{{link}}", baseUrl + sm_hash);
 
-		const sm = {
-			sm_to: data.mb_email,
-			sm_type: 1,
-			sm_hash,
-			sm_subject,
-			sm_content,
-			sm_create_at,
-			sm_expire_at: expire_at.format('LT'),
-		}
-    //이메일 전송 
-		try {
-			await sendMailer(`${title} 관리자`, data.mb_email, sm_subject, sm_content);
-			const smSql = sqlHelper.Insert(TABLE.SEND_MAIL, sm);
-			await db.execute(smSql.query, smSql.values);
-		} catch (e) {
-			console.log(e);
-			return { err: `email 발송에 실패 하였습니다\n관리자에게 문의 주세요.` };
-		}
-		
-		return member;
-	},
-	
-	async modifyPassword(data) {
-		  // 유효시간이 경과된 거 삭제
-		  const delQuery = `DELETE FROM ${TABLE.SEND_MAIL} WHERE sm_type=1 AND sm_expire_at < NOW()`;
-		  await db.execute(delQuery);
-		  // 유효시간 안에 해쉬로 검색
-		  const sql = {
-			  query: `SELECT sm_to FROM ${TABLE.SEND_MAIL} WHERE sm_type=? AND sm_hash=? AND sm_expire_at > NOW()`,
-			  values: [1, data.hash],
-		  };
-		  const [[row]] = await db.execute(sql.query, sql.values);
-		  // 없으면 에러
-		  if (!row) {
-			  throw new Error('시간이 만료되었거나 이미 처리되었습니다.');
-		  }
-		  // 있으면 비밀번호를 변경 하고
-		  const mb_email = row.sm_to;
-		  const mb_password = await jwt.generatePassword(data.password);
-		  const upSql = sqlHelper.Update(TABLE.MEMBER, { mb_password }, { mb_email });
-		  const [upRes] = await db.execute(upSql.query, upSql.values);
-  
-		  // 처리한거 삭제
-		  const delSql = sqlHelper.DeleteSimple(TABLE.SEND_MAIL, {sm_hash : data.hash});
-		  db.execute(delSql.query, delSql.values);
-		  return upRes.affectedRows == 1;
-	  },
-	  
-  async loginGoole(req, profile) {
+    const sm = {
+      sm_to: data.mb_email,
+      sm_type: 1,
+      sm_hash,
+      sm_subject,
+      sm_content,
+      sm_create_at,
+      sm_expire_at: expire_at.format("LT"),
+    };
+    //이메일 전송
+    try {
+      await sendMailer(
+        `${title} 관리자`,
+        data.mb_email,
+        sm_subject,
+        sm_content
+      );
+      const smSql = sqlHelper.Insert(TABLE.SEND_MAIL, sm);
+      await db.execute(smSql.query, smSql.values);
+    } catch (e) {
+      console.log(e);
+      return { err: `email 발송에 실패 하였습니다\n관리자에게 문의 주세요.` };
+    }
+
+    return member;
+  },
+
+  async modifyPassword(data) {
+    // 유효시간이 경과된 거 삭제
+    const delQuery = `DELETE FROM ${TABLE.SEND_MAIL} WHERE sm_type=1 AND sm_expire_at < NOW()`;
+    await db.execute(delQuery);
+    // 유효시간 안에 해쉬로 검색
+    const sql = {
+      query: `SELECT sm_to FROM ${TABLE.SEND_MAIL} WHERE sm_type=? AND sm_hash=? AND sm_expire_at > NOW()`,
+      values: [1, data.hash],
+    };
+    const [[row]] = await db.execute(sql.query, sql.values);
+    // 없으면 에러
+    if (!row) {
+      throw new Error("시간이 만료되었거나 이미 처리되었습니다.");
+    }
+    // 있으면 비밀번호를 변경 하고
+    const mb_email = row.sm_to;
+    const mb_password = await jwt.generatePassword(data.password);
+    const upSql = sqlHelper.Update(TABLE.MEMBER, { mb_password }, { mb_email });
+    const [upRes] = await db.execute(upSql.query, upSql.values);
+
+    // 처리한거 삭제
+    const delSql = sqlHelper.DeleteSimple(TABLE.SEND_MAIL, {
+      sm_hash: data.hash,
+    });
+    db.execute(delSql.query, delSql.values);
+    return upRes.affectedRows == 1;
+  },
+
+  async loginGoogle(req, profile) {
 		let member = null;
-		try { // 이미 회원 있는지 ?
-			member = await memberModel.getMemberBy({
-				mb_email: profile.email
-			});
-		} catch (e) { // 없으면 새로 디비에 저장
+		try {
+			member = await memberModel.getMemberBy({ mb_email: profile.email })
+		} catch (e) {
 			const at = moment().format('LT');
 			const ip = getIp(req);
 			const data = {
-				mb_id : profile.id,
-				mb_password : '',
-				mb_name : profile.displayName,
-				mb_email : profile.email,
+				mb_id: profile.id,
+				mb_password: '',
+				mb_provider : profile.provider,
+				mb_name: profile.displayName,
+				mb_email: profile.email,
+				mb_photo: profile.picture,
 				mb_level: await getDefaultMemberLevel(),
 				mb_create_at: at,
 				mb_create_ip: ip,
@@ -187,36 +198,60 @@ const memberModel = {
 			};
 			const sql = sqlHelper.Insert(TABLE.MEMBER, data);
 			await db.execute(sql.query, sql.values);
-			member = await memberModel.getMemberBy({
-				mb_email: profile.email
-			});
+			member = await memberModel.getMemberBy({ mb_email: profile.email });
 		}
 		return member;
 	},
-
-  async googleCallback(req, res, err, member) {
+	async loginKakao(req, profile) {
+		let member = null;
+		
+		const {email} = profile._json.kakao_account;
+		const { nickname, thumbnail_image_url} = profile._json.kakao_account.profile;
+		
+		try {
+			member = await memberModel.getMemberBy({ mb_email: email })
+		} catch (e) {
+			const at = moment().format('LT');
+			const ip = getIp(req);
+			const data = {
+				mb_id: profile.id,
+				mb_password: '',
+				mb_provider : profile.provider,
+				mb_name: nickname,
+				mb_email: email,
+				mb_photo: thumbnail_image_url,
+				mb_level: await getDefaultMemberLevel(),
+				mb_create_at: at,
+				mb_create_ip: ip,
+				mb_update_at: at,
+				mb_update_ip: ip,
+			};
+			const sql = sqlHelper.Insert(TABLE.MEMBER, data);
+			await db.execute(sql.query, sql.values);
+			member = await memberModel.getMemberBy({ mb_email: email });
+		}
+		return member;
+	},
+	async socialCallback(req, res, err, member) {
 		let html = fs.readFileSync(__dirname + '/socialPopup.html').toString();
 		let payload = {};
 		if (err) {
 			payload.err = err;
 		} else {
-			// 토큰, 만들고 쿠키 생성
+			// 토큰 만들고 쿠키 설정
 			const token = jwt.getToken(member);
 			req.body.mb_id = member.mb_id;
-		
 			const data = memberModel.loginMember(req);
 			member.mb_login_at = data.mb_login_at;
 			member.mb_login_ip = data.mb_login_ip;
 			res.cookie('token', token, { httpOnly: true });
-
-			payload.token = token;
 			payload.member = member;
+			payload.token = token;
 		}
-		// console.log(payload);
-		html = html.replace('{{payload}}', JSON.stringify(payload));
 
+		html = html.replace('{{payload}}', JSON.stringify(payload));
 		return html;
-	},
+	}
 };
 
 module.exports = memberModel;

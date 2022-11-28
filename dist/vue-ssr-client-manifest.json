@@ -31,20 +31,20 @@
     "fonts/Roboto-Regular.475ba9e4.woff2",
     "fonts/Roboto-Light.0e01b6cd.woff2",
     "fonts/Roboto-Thin.f7a95c9c.woff2",
-    "js/about.fffb5bbb.js",
-    "js/main.0154be1d.js",
-    "js/manifest.01712520.js",
+    "js/about.0f736ca6.js",
+    "js/main.112ed0c7.js",
+    "js/manifest.95e624d6.js",
     "js/modifyPassword.c3dff7e4.js",
     "favicon.ico"
   ],
   "initial": [
-    "js/manifest.01712520.js",
+    "js/manifest.95e624d6.js",
     "css/vendor.770ae3e4.css",
     "js/vendor.b40f7c91.js",
-    "js/main.0154be1d.js"
+    "js/main.112ed0c7.js"
   ],
   "async": [
-    "js/about.fffb5bbb.js",
+    "js/about.0f736ca6.js",
     "js/modifyPassword.c3dff7e4.js"
   ],
   "modules": {
