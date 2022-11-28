@@ -22,6 +22,11 @@ const routes = [
       component: () => import(/* webpackChunkName: "about" */ '../views/member/JoinView.vue')
     },
     {
+      path: '/modifyPassword/:hash',
+      name: 'NoAuthModifyPassword',
+      component: () => import(/* webpackChunkName: "modifyPassword" */ '../views/member/ModifyPassword.vue')
+    },
+    {
       path: '/*',
       name: 'Error',
       component: () => import(/* webpackChunkName: "about" */ '../views/ErrorView.vue')

@@ -60,5 +60,27 @@ router.get('/findId', async(req, res)=>{
 	res.json(result);
 });
 
+// 비밀번호 찾기
+router.get('/findPw', async(req, res)=>{
+	const result = await modelCall(memberModel.findPw, req);
+	res.json(result);
+});
+
+// 비밀번호 변경
+router.patch('/modifyPassword', async (req, res) => {
+	const result = await modelCall(memberModel.modifyPassword, req.body);
+	res.json(result);
+});
+
+// 구글 로그인 요청
+router.get('/loginGoogle', passport.authenticate("google", { scope: ["email", "profile"] }));
+
+// 구글 로그인 콜백
+router.get('/google-callback',  (req, res)=>{
+	passport.authenticate('google', async function (err, member) {
+		const result = await modelCall(memberModel.googleCallback, req, res,  err, member);
+		res.end(result);
+	})(req, res);
+});
 
 module.exports = router;

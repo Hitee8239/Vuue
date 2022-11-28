@@ -1,7 +1,12 @@
+require('dotenv').config();
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const jwt = require("./jwt");
 const memberModel = require("../api/_model/memberModel");
+const GoogleStrategy = require('passport-google-oauth2').Strategy;
+
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, CALLBACK_URL } = process.env;
+
 
 module.exports = (app) => {
   app.use(passport.initialize());
@@ -25,6 +30,8 @@ module.exports = (app) => {
     )
   );
 
+  
+  
   //인증
   app.use(async (req, res, next) => {
     const token = req.cookies.token;
@@ -39,4 +46,21 @@ module.exports = (app) => {
     }
     next();
   });
+  passport.use(new GoogleStrategy(
+    {
+      clientID: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
+      callbackURL: `${CALLBACK_URL}/api/member/google-callback`,
+      passReqToCallback: true
+    },
+    async function (request, accessToken, refreshToken, profile, done) {
+    
+      if(profile && profile.id) {
+        const member = await memberModel.loginGoole(request, profile);
+        return done(null, member);
+      } else {
+        return done('로그인 실패', null )
+      }
+    }
+  ));
 };
