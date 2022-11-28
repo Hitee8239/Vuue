@@ -27,9 +27,9 @@
           }
       },
       computed: {
-        memberPhoto(){
-            return this.member.mb_photo || `/upload/memberPhoto/${member.mb_id}.jpg?w=32&h=32` ;
-        }
+          memberPhoto() {
+            return this.member.mb_photo || `/upload/memberPhoto/${this.member.mb_id}.jpg?w=32&h=32`;
+          }
       },
       methods : {
           imageError() {
@@ -38,3 +38,6 @@
       }
   };
   </script>
+  
+  <style>
+  </style>

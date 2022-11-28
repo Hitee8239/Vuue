@@ -35,6 +35,10 @@
 			</v-card-text>
 
       <v-card-text class="mt-n4">
+        <v-btn @click="loginNaver" block>네이버 로그인</v-btn>
+      </v-card-text>
+
+      <v-card-text class="mt-n4">
         <v-btn to="/join" block>회원가입</v-btn>
       </v-card-text>
     </v-card>
@@ -101,6 +105,10 @@ export default {
     loginKakao() {
 			this.loginSocial('/api/member/loginKakao');
 		},
+    loginNaver() {
+			this.loginSocial('/api/member/loginNaver');
+		},
+    
     loginSocial(url) {
       window.open(
         url,
