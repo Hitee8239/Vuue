@@ -27,7 +27,7 @@ export function createApp(ctx) {
 		store,
 		vuetify,
 		render: h => h(App)
-	});
+	}).$mount('#app');
 
 	return { app, router, store };
 }

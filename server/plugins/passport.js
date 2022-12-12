@@ -94,6 +94,11 @@ module.exports = (app) => {
 			}
 		}
 	));
+
+	
+
+
+
   //인증
   app.use(async (req, res, next) => {
     const token = req.cookies.token;

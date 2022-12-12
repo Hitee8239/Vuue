@@ -1,110 +1,71 @@
 <template>
-  <div>
-    <h1>토스트 테스트</h1>
-    <div>
-      <v-btn @click="toastTest1">토스트 Info</v-btn>
-      <v-btn @click="toastTest2">토스트 Success</v-btn>
-      <v-btn @click="toastTest3">토스트 Error</v-btn>
-      <v-btn @click="toastTest4">토스트 Warning</v-btn>
-      <v-btn @click="toastTest5">전역 Error</v-btn>
-    </div>
-    <h1>프로그레스 테스트</h1>
-    <div>
-      <v-btn @click="barTest1">start</v-btn>
-      <v-btn @click="barTest2">finish</v-btn>
-      <v-btn @click="barTest3">fail</v-btn>
-    </div>
-    <h1>Notify Test</h1>
-    <div>
-      <v-btn @click="notifyTest1">Alert</v-btn>
-      <v-btn @click="notifyTest2">Confirm</v-btn>
-      <v-btn @click="notifyTest3">Prompt</v-btn>
-    </div>
-    <h1>axios test</h1>
-    <v-btn @click="axiosTest1"> test</v-btn>
-    <v-btn @click="axiosTest2"> error</v-btn>
-  </div>
+  <v-container style="padding: 0px" class="text_center">
+    <v-layout>
+      <v-img src="../assets/dog1.jpg">
+        <h1 class="color-white">Welcome to DOGFLIX</h1>
+        <p class="color-white">
+          국내 여러가지 강이지 동영상을 보여주는 DOGFLIX!
+        </p>
+      </v-img>
+    </v-layout>
+
+    <v-layout pt-2>
+      <v-carousel>
+        <v-carousel-item
+          v-for="(item, i) in items"
+          :key="i"
+          :src="item.src"
+          class="text_down"
+          
+        >
+          <h1 class="stroke color-white text_down">
+            {{ item.titleName }}
+          </h1>
+        </v-carousel-item>
+      </v-carousel>
+    </v-layout>
+
+    <v-layout>
+      
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
 export default {
   name: "Home",
-  data(){
-    return{
-      title : "My App",
-    }
+  data() {
+    return {
+      title: "DOGFLIX",
+    };
   },
   title() {
-		return "My home";
-	},
-	serverPrefetch() {
+    return "DOGFLIX";
+  },
+  serverPrefetch() {
     return new Promise((resolve, reject) => {
       resolve();
     });
   },
-  beforeCreate() {
-  },
-  created() {
-  },
-  beforeMount() {
-  },
-  mounted() {
-  },
-  methods: {
-    toastTest1() {
-      this.$toast.info("Hello Info");
-    },
-    toastTest2() {
-      this.$toast.success("Hello success");
-    },
-    toastTest3() {
-      this.$toast.error("Hello error");
-    },
-    toastTest4() {
-      this.$toast.warning("Hello warning");
-    },
-    toastTest5() {
-      try {
-        throw new Error("전역 에러");
-      } catch (e) {
-        this.$toast.error(e.message);
-      }
-    },
-    barTest1() {
-      this.$Progress.start();
-    },
-    barTest2() {
-      this.$Progress.finish();
-    },
-    barTest3() {
-      this.$Progress.fail();
-    },
-    async notifyTest1() {
-      const res = await this.$notify.alert("테스트 내용입니다.", "안내", {
-        icon: "mdi-video-4k-box",
-      });
-      console.log(res);
-    },
-    async notifyTest2() {
-      const res = await this.$notify.confirm("테스트 내용입니다.", "");
-      console.log(res);
-    },
-    async notifyTest3() {
-      const res = await this.$notify.prompt(
-        "테스트 내용입니다.",
-        "프롬프트",
-        { width: 200 }
-      );
-      console.log(res);
-    },
-    async axiosTest1(){
-      const result = await this.$axios.get('/api/member/test');
-      console.log(result);
-    },
-    async axiosTest2(){
-      const result = await this.$axios.get('/api/error');
-      console.log(result);
+  computed: {
+    items() {
+      return this.$store.state.banner;
     },
   },
 };
 </script>
+
+<style>
+.text_center {
+  text-align: center;
+}
+.color-white {
+  color: white;
+}
+.stroke {
+  -webkit-text-stroke: 2px black;
+}
+.text_down {
+  vertical-align: bottom;
+}
+</style>

@@ -1,5 +1,6 @@
 import HomeView from '../views/HomeView.vue'
 
+
 const routes = [
     {
       path: '/',
@@ -20,6 +21,11 @@ const routes = [
       path: '/join',
       name: 'NoAuthJoin',
       component: () => import(/* webpackChunkName: "about" */ '../views/member/JoinView.vue')
+    },
+    {
+      path: '/video',
+      name: 'videoMain',
+      component: () => import(/* webpackChunkName: "about" */ '../components/youtube/VideoMain.vue')
     },
     {
       path: '/modifyPassword/:hash',

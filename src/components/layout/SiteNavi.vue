@@ -17,8 +17,8 @@
 
 <script>
 import { mapState } from "vuex";
-import NestedMenu from "./NestedMenu.vue";
 import { deepCopy } from "../../../util/lib";
+import NestedMenu from "./NestedMenu.vue";
 import SiteTitle from "./SiteTitle.vue";
 
 export default {
