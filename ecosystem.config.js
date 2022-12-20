@@ -1,7 +1,7 @@
 module.exports = {
 	apps : [
 		{
-			name : 'DOGFLIX',
+			name : 'HiteeSite',
 			script : './server/server.js',
 			instances : 0,
 			scale : 2,

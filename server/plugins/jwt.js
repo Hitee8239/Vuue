@@ -7,7 +7,7 @@ const { SECRET_KEY } = process.env;
 
 const options = {
 	algorithm : 'HS256',
-	issuer : 'dogflix',
+	issuer : 'hiteesite',
 	// expiresIn : '60m',
 };
 

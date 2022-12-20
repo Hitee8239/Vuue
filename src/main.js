@@ -11,6 +11,7 @@ import '@mdi/font/css/materialdesignicons.css'
 import titleMixin from './mixins/title-mixin';
 
 
+
 Vue.config.productionTip = false
 
 export function createApp(ctx) {

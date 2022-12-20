@@ -55,7 +55,10 @@ app.use(express.static(path.join(__dirname, "../dist")));
 
 // api 라우터
 const memberRouter = require('./api/member');
+const boardRouter = require('./api/board')
 app.use('/api/member', memberRouter);
+app.use('/api/board', boardRouter);
+
 app.use('/api/*', (req, res)=> {
 	res.json({err : "요청하신 API가 없습니다."});
 })
@@ -74,6 +77,7 @@ app.get('*', (req, res) => {
 		runInNewContext : false,
 		template,
 		clientManifest,
+		
 	});
 	
 	const ctx = {

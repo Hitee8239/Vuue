@@ -9,8 +9,8 @@ const store = new Vuex.Store({
   state: {
     appReady: false,
     config: {
-      title: "DOGFLIX",
-      footer: "DOGFLIX all right reserved.",
+      title: "Hitee Site",
+      footer: "Hitee Site all right reserved.",
       menu: [
         {
           title: "Home",

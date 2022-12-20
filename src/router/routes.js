@@ -23,10 +23,16 @@ const routes = [
       component: () => import(/* webpackChunkName: "about" */ '../views/member/JoinView.vue')
     },
     {
-      path: '/video',
-      name: 'videoMain',
-      component: () => import(/* webpackChunkName: "about" */ '../components/youtube/VideoMain.vue')
+      path: '/guestboard',
+      name: 'NoticeBoard',
+      component: () => import(/* webpackChunkName: "about" */ '../components/write/WritePage.vue')
     },
+    {
+      path: '/board',
+      name: 'Board',
+      component: () => import(/* webpackChunkName: "about" */ '../views/board/BoardView.vue')
+    },
+
     {
       path: '/modifyPassword/:hash',
       name: 'NoAuthModifyPassword',

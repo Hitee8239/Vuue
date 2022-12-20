@@ -2,9 +2,9 @@
   <v-container style="padding: 0px" class="text_center">
     <v-layout>
       <v-img src="../assets/dog1.jpg">
-        <h1 class="color-white">Welcome to DOGFLIX</h1>
+        <h1 class="color-white">Welcome to Hitee World</h1>
         <p class="color-white">
-          국내 여러가지 강이지 동영상을 보여주는 DOGFLIX!
+          Hitee Site
         </p>
       </v-img>
     </v-layout>
@@ -36,11 +36,11 @@ export default {
   name: "Home",
   data() {
     return {
-      title: "DOGFLIX",
+      title: "Hitee Site",
     };
   },
   title() {
-    return "DOGFLIX";
+    return "Hitee Site";
   },
   serverPrefetch() {
     return new Promise((resolve, reject) => {
@@ -52,6 +52,7 @@ export default {
       return this.$store.state.banner;
     },
   },
+ 
 };
 </script>
 

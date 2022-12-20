@@ -1,5 +1,5 @@
-const fs = require("fs");
 const sendMailer = require("../../plugins/sendMailer");
+const fs = require("fs");
 const db = require("../../plugins/mysql");
 const jwt = require("../../plugins/jwt");
 
@@ -105,7 +105,7 @@ const memberModel = {
 
     //토큰발급
     const sm_hash = jwt.getRandToken(64);
-    const title = "DOGFLIX";
+    const title = "HiteeSite";
     const sm_subject = `${title} 비밀번호 찾기`;
     const sm_create_at = moment().format("LT");
     const expire_at = moment().add("30", "m");
